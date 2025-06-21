@@ -22,11 +22,15 @@ client.loadEvents("src/events");
 // find unhandled promise rejections
 process.on("unhandledRejection", (err) => client.logger.error(`Unhandled exception`, err));
 
+const deployCommands = require('./deploy-commands');
+const express = require('express');
+const app = express();
+
 (async () => {
   // check for updates
   await checkForUpdates();
 
-  // start the dashboard
+  // start the dashboard or initialize database
   if (client.config.DASHBOARD.enabled) {
     client.logger.log("Launching dashboard");
     try {
@@ -42,9 +46,6 @@ process.on("unhandledRejection", (err) => client.logger.error(`Unhandled excepti
     await initializeMongoose();
   }
 
-const deployCommands = require('./deploy-commands');
-
-(async () => {
   try {
     await deployCommands();
     console.log('Commandes déployées automatiquement au démarrage');
@@ -52,16 +53,10 @@ const deployCommands = require('./deploy-commands');
     console.error('Erreur lors du déploiement des commandes:', error);
   }
 
-  // Ici démarre ton bot normalement, par exemple :
   await client.login(process.env.BOT_TOKEN);
+
+  app.get('/', (req, res) => res.send('Bot is running!'));
+
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
 })();
-
-
-
-const express = require('express');
-const app = express();
-
-app.get('/', (req, res) => res.send('Bot is running!'));
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
