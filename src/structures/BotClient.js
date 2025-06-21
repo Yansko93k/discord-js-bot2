@@ -30,6 +30,12 @@ module.exports = class BotClient extends Client {
         GatewayIntentBits.GuildMessageReactions,
         GatewayIntentBits.GuildVoiceStates,
       ],
+    });
+
+    this.commands = new Map(); // ✅ Ceci est EN DEHORS de super()
+  }
+};
+
       partials: [Partials.User, Partials.Message, Partials.Reaction],
       allowedMentions: {
         repliedUser: false,
