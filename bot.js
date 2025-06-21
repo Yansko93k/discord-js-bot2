@@ -22,7 +22,8 @@ client.loadEvents("src/events");
 // find unhandled promise rejections
 process.on("unhandledRejection", (err) => client.logger.error(`Unhandled exception`, err));
 
-const deployCommands = require('./deploy-commands');
+const path = require('path');
+const deployCommands = require(path.join(__dirname, '..', 'deploy-commands'));
 const express = require('express');
 const app = express();
 
