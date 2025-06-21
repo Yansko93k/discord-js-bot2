@@ -36,7 +36,39 @@ module.exports = class BotClient extends Client {
   }
 };
 
-      partials: [Partials.User, Partials.Message, Partials.Reaction],
+   loadCommands(commandsPath) {
+    const commandFiles = [];
+
+    function readDirRecursive(dir) {
+      const files = fs.readdirSync(dir);
+      for (const file of files) {
+        const fullPath = path.join(dir, file);
+        if (fs.statSync(fullPath).isDirectory()) {
+          readDirRecursive(fullPath);
+        } else if (file.endsWith('.js')) {
+          commandFiles.push(fullPath);
+        }
+      }
+    }
+
+    readDirRecursive(commandsPath);
+
+    for (const file of commandFiles) {
+      try {
+        const command = require(file);
+        if (command.data && command.execute) {
+          this.commands.set(command.data.name, command);
+          console.log(`✅ Commande chargée : ${command.data.name}`);
+        } else {
+          console.warn(`⚠️ Commande invalide dans ${file}`);
+        }
+      } catch (error) {
+        console.error(`❌ Erreur lors du chargement de ${file}:`, error);
+      }
+    }
+  }
+    
+    partials: [Partials.User, Partials.Message, Partials.Reaction],
       allowedMentions: {
         repliedUser: false,
       },
