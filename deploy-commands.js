@@ -5,7 +5,7 @@ require('dotenv').config();
 
 module.exports = async () => {
   const commands = [];
-  const commandsPath = path.join(__dirname, 'src', 'commands');
+  const commandsPath = path.join(__dirname, 'commands');
   const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
   for (const file of commandFiles) {
