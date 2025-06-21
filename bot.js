@@ -42,9 +42,21 @@ process.on("unhandledRejection", (err) => client.logger.error(`Unhandled excepti
     await initializeMongoose();
   }
 
-  // start the client
+const deployCommands = require('./deploy-commands');
+
+(async () => {
+  try {
+    await deployCommands();
+    console.log('Commandes déployées automatiquement au démarrage');
+  } catch (error) {
+    console.error('Erreur lors du déploiement des commandes:', error);
+  }
+
+  // Ici démarre ton bot normalement, par exemple :
   await client.login(process.env.BOT_TOKEN);
 })();
+
+
 
 const express = require('express');
 const app = express();
