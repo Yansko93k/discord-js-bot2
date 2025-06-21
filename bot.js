@@ -45,3 +45,11 @@ process.on("unhandledRejection", (err) => client.logger.error(`Unhandled excepti
   // start the client
   await client.login(process.env.BOT_TOKEN);
 })();
+
+const express = require('express');
+const app = express();
+
+app.get('/', (req, res) => res.send('Bot is running!'));
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
